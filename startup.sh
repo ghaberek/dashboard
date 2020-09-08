@@ -31,9 +31,11 @@ then
   mkdir -p /var/lxdware/data/sqlite
 fi
 
-#Setup LXD Simplestreams locations
+#Initialize LXDWARE database
 if [ ! -f /var/lxdware/data/sqlite/lxdware.sqlite ]
 then
+  cmd="CREATE TABLE IF NOT EXISTS lxd_hosts (id INTEGER PRIMARY KEY AUTOINCREMENT, host TEXT NOT NULL, port INTEGER NOT NULL, alias TEXT, protocol TEXT);"
+  sqlite3 /var/lxdware/data/sqlite/lxdware.sqlite "$cmd"
   cmd="CREATE TABLE IF NOT EXISTS lxd_simplestreams (id INTEGER PRIMARY KEY AUTOINCREMENT, host TEXT NOT NULL, alias TEXT, protocol TEXT);"
   sqlite3 /var/lxdware/data/sqlite/lxdware.sqlite "$cmd"
   cmd="INSERT INTO lxd_simplestreams (host, alias, protocol) VALUES ('https://images.linuxcontainers.org', 'Linux Containers', 'simplestreams');"
