@@ -17,7 +17,6 @@ then
   mkdir -p $HOME/.config/lxc/
   cp -a /var/lxdware/data/lxd/client.crt $HOME/.config/lxc/client.crt
   cp -a /var/lxdware/data/lxd/client.key $HOME/.config/lxc/client.key
-
 else
   lxc remote add localhost
   cp -a $HOME/.config/lxc/client.crt /var/lxdware/data/lxd/client.crt
@@ -30,6 +29,7 @@ if [ ! -d /var/lxdware/data/sqlite ]
 then
   mkdir -p /var/lxdware/data/sqlite
 fi
+
 
 #Initialize LXDWARE database
 if [ ! -f /var/lxdware/data/sqlite/lxdware.sqlite ]
@@ -46,6 +46,7 @@ then
   sqlite3 /var/lxdware/data/sqlite/lxdware.sqlite "$cmd"
 fi
 
+chown -R www-data:www-data /var/lxdware/data/lxd
 chown -R www-data:www-data /var/lxdware/data/sqlite
 
 

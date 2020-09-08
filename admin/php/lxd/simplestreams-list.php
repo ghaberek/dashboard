@@ -1,7 +1,7 @@
 <?php
 
-//$cert = "/root/.config/lxc/client.crt";
-//$key = "/root/.config/lxc/client.key";
+//$cert = "/var/lxdware/data/lxd/client.crt";
+//$key = "/var/lxdware/data/lxd/client.key";
 
 $db = new SQLite3('/var/lxdware/data/sqlite/lxdware.sqlite');
 $db_results = $db->query('SELECT * FROM lxd_simplestreams');

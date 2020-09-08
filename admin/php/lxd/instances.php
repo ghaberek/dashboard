@@ -31,8 +31,8 @@ while($res = $db_results->fetchArray()){
   $url = "https://" . $res['host'] . ":" . $res['port'];
 
   //Set the curl variables
-  $cert = "/root/.config/lxc/client.crt";
-  $key = "/root/.config/lxc/client.key";
+  $cert = "/var/lxdware/data/lxd/client.crt";
+  $key = "/var/lxdware/data/lxd/client.key";
 
   //Run the matching action
   switch ($action) {

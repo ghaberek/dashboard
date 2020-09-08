@@ -22,8 +22,8 @@ if (isset($_POST['json']))
   $json = $_POST['json'];
 
 //Set the curl variables
-$cert = "/root/.config/lxc/client.crt";
-$key = "/root/.config/lxc/client.key";
+$cert = "/var/lxdware/data/lxd/client.crt";
+$key = "/var/lxdware/data/lxd/client.key";
 
 //Query DB to find remote
 $db = new SQLite3('/var/lxdware/data/sqlite/lxdware.sqlite');

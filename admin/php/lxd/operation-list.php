@@ -1,7 +1,7 @@
 <?php
 
-$cert = "/root/.config/lxc/client.crt";
-$key = "/root/.config/lxc/client.key";
+$cert = "/var/lxdware/data/lxd/client.crt";
+$key = "/var/lxdware/data/lxd/client.key";
 
 if (isset($_GET['remote']))
   $remote = filter_var(urldecode($_GET['remote']), FILTER_SANITIZE_STRING);

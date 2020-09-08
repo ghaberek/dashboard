@@ -6,8 +6,8 @@ if (isset($_GET['remote']))
 if (isset($_GET['id']))
   $id = filter_var(urldecode($_GET['id']), FILTER_SANITIZE_STRING);
 
-$cert = "/root/.config/lxc/client.crt";
-$key = "/root/.config/lxc/client.key";
+$cert = "/var/lxdware/data/lxd/client.crt";
+$key = "/var/lxdware/data/lxd/client.key";
 
 $db = new SQLite3('/var/lxdware/data/sqlite/lxdware.sqlite');
 $db_statement = $db->prepare('SELECT * FROM lxd_hosts WHERE id = :id LIMIT 1;');

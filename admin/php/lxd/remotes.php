@@ -13,8 +13,8 @@ if (isset($_GET['action']))
   $action = filter_var(urldecode($_GET['action']), FILTER_SANITIZE_STRING);
 
 //Set the curl variables
-$cert = "/root/.config/lxc/client.crt";
-$key = "/root/.config/lxc/client.key";
+$cert = "/var/lxdware/data/lxd/client.crt";
+$key = "/var/lxdware/data/lxd/client.key";
 
 $db = new SQLite3('/var/lxdware/data/sqlite/lxdware.sqlite');
 $db->busyTimeout(5000);

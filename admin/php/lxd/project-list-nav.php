@@ -6,8 +6,8 @@ if (isset($_GET['project']))
   $project = filter_var(urldecode($_GET['project']), FILTER_SANITIZE_STRING);
 
 
-$cert = "/root/.config/lxc/client.crt";
-$key = "/root/.config/lxc/client.key";
+$cert = "/var/lxdware/data/lxd/client.crt";
+$key = "/var/lxdware/data/lxd/client.key";
 
 $return_url = strtok($_SERVER["HTTP_REFERER"], '?');
 
