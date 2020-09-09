@@ -14,19 +14,14 @@ $db_statement->bindValue(':id', $remote);
 $db_results = $db_statement->execute();
 
 while($row = $db_results->fetchArray()){
-  $url = "https://" . $row['host'] . ":" . $row['port'] . "/1.0/instances?project=" . $project;
+  $url = "https://" . $row['host'] . ":" . $row['port'] . "/1.0/instances?recursion=2&project=" . $project;
   $remote_data = shell_exec("sudo curl -k -L --cert $cert --key $key -X GET $url");
   $remote_data = json_decode($remote_data, true);
-  $instance_urls = $remote_data['metadata'];
 
   $i = 0;
   echo '{ "data": [';
 
-  foreach ($instance_urls as $instance_url){
-    $url = "https://" . $row['host'] . ":" . $row['port'] . $instance_url . "?project=" . $project;
-    $instance_data = shell_exec("sudo curl -k -L --cert $cert --key $key -X GET $url");
-    $instance_data = json_decode($instance_data, true);
-    $instance_data = $instance_data['metadata'];
+  foreach ($remote_data['metadata'] as $instance_data){
     if ($instance_data['name'] == "")
       continue;
 
@@ -54,8 +49,29 @@ while($row = $db_results->fetchArray()){
       echo "<a href='instance.html?instance=".$instance_data['name']."&remote=".$remote."&project=".$project."'> ".$instance_data['name']."</a>";
       echo '",';
     }
-   
+
     echo '"' . $instance_data['config']['image.description'] . '",';
+
+    $ipv4_address = "";
+    $ipv6_address = "";
+
+    if (isset($instance_data['state']['network']['eth0'])) {
+
+      foreach ($instance_data['state']['network']['eth0']['addresses'] as $address){
+
+        if ($address['family'] == 'inet' && $address['scope'] == 'global') {
+          $ipv4_address = $address['address'];
+        }
+
+        if ($address['family'] == 'inet6' && $address['scope'] == 'global') {
+          $ipv6_address = $address['address'];
+        }
+
+      }
+    }
+
+    echo '"' . $ipv4_address . '",';
+    echo '"' . $ipv6_address . '",';
     echo '"' . $instance_data['type'] . '",';
     echo '"' . $instance_data['architecture'] . '",';
     echo '"' . $instance_data['status'] . '",';
@@ -70,13 +86,13 @@ while($row = $db_results->fetchArray()){
       echo "<a href='#' onclick=startInstance('".$instance_data['name']."')> <i class='fas fa-play fa-lg' style='color:#ddd'></i> </a>";
       echo '"';
     }
-    
+
     echo " ]";
 
   }
 
   echo " ]}";
-  
+
 }
 
 
