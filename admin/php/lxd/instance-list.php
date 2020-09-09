@@ -70,8 +70,25 @@ while($row = $db_results->fetchArray()){
       }
     }
 
+    $disk_usage = "";
+
+    if (isset($instance_data['state']['disk']['root'])) {
+
+      $disk_usage = $instance_data['state']['disk']['root']['usage']/1024/1024;
+      $disk_usage_unit = "MB";
+
+      if ($disk_uage > 1024){
+          $disk_usage = $disk_usage / 1024;
+          $disk_usage_unit = "GB";
+      }
+
+      $disk_usage = number_format($disk_usage,2)." ".$disk_usage_unit;
+
+    }
+
     echo '"' . $ipv4_address . '",';
     echo '"' . $ipv6_address . '",';
+    echo '"' . $disk_usage . '",';
     echo '"' . $instance_data['type'] . '",';
     echo '"' . $instance_data['architecture'] . '",';
     echo '"' . $instance_data['status'] . '",';
