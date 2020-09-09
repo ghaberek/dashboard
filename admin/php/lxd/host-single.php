@@ -26,15 +26,31 @@ while($row = $db_results->fetchArray()){
   $resource_data = $resource_data['metadata'];
 
 
-  $system_vendor = $resource_data['system']['vendor'];
-  $system_product = $resource_data['system']['product'];
+  $system_vendor = $resource_data['system']['vendor'] ?: "N/A";
+  $system_product = $resource_data['system']['product'] ?: "N/A";
   $architecture = $resource_data['cpu']['architecture']; //example: x86
   $cpus = $resource_data['cpu']['total']; //total number of cpus
   $sockets = $resource_data['cpu']['sockets']; //array of cpu info per socket
   $storage_disks = $resource_data['storage']['disks']; //array of storage devices
- 
-  $memory_total = number_format($resource_data['memory']['total']/1024/1024/1024,2); //total amount of memory used in GB
-  $memory_used = number_format($resource_data['memory']['used']/1024/1024/1024,2); //current amount of memory used in GB
+
+  $memory_total = $resource_data['memory']['total']/1024/1024;
+  $memory_total_unit = "MB";
+
+  if ( $memory_total > 1024 ){
+    $memory_total = $memory_total / 1024;
+    $memory_total_unit = "GB";
+  }
+
+  $memory_used = $resource_data['memory']['used']/1024/1024;
+  $memory_used_unit = "MB";
+
+  if ( $memory_used > 1024 ){
+    $memory_used = $memory_used / 1024;
+    $memory_used_unit = "GB";
+  }
+
+  $memory_total = number_format($memory_total,2);
+  $memory_used = number_format($memory_used,2);
   $memory_free = $memory_total - $memory_used;
 
   $url1 = "https://" . $row['host'] . ":" . $row['port'] . "/1.0/instances?project=" . $project;
@@ -84,12 +100,12 @@ while($row = $db_results->fetchArray()){
     echo "<li><strong>Architecture</strong>: " . htmlentities($architecture) . "</li>";
     echo "<li><strong>CPU Count</strong>: " . htmlentities($cpus) . "</li>";
     foreach($sockets as $socket){
-      echo "<li><strong>Socket " . $socket['socket'] . "</strong>: " . $socket['name'] . "</li>";
+      echo "<li><strong>Socket " . $socket['socket'] . "</strong>: " . ($socket['name'] ?: "N/A") . "</li>";
     }
     echo "</ul>";
 
-    echo "<strong>Memory Total</strong>: " . htmlentities($memory_total) . " GB<br />";
-    echo "<strong>Memory Used</strong>: " . htmlentities($memory_used) . " GB<br />";
+    echo "<strong>Memory Total</strong>: " . htmlentities($memory_total) . " " . $memory_total_unit . "<br />";
+    echo "<strong>Memory Used</strong>: " . htmlentities($memory_used) . " " . $memory_used_unit . "<br />";
     echo "<br />";
 
     echo "<strong>Disk Storage Information</strong>: <br />";
@@ -98,11 +114,11 @@ while($row = $db_results->fetchArray()){
         continue;
       echo "<ul>";
       echo "<li><strong>Disk ID</strong>: " . $disk['id'] . "</li>";
-      echo "<li><strong>Disk model</strong>: " . $disk['model'] . "</li>";
+      echo "<li><strong>Disk model</strong>: " . ($disk['model'] ?: "N/A") . "</li>";
       echo "<li><strong>Disk type</strong>: " . $disk['type'] . "</li>";
       echo "<li><strong>Disk size</strong>: " . number_format($disk['size']/1024/1024/1024,2) . " GB</li>";
       echo "</ul>";
-    }   
+    }
 
   echo '</div>';
 
